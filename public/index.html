@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+<meta charset="UTF-8">
+
+<title>Bingo Mede</title>
+
+<style>
+
+body{
+    font-family: Arial, sans-serif;
+    text-align:center;
+    margin:20px;
+}
+
+#numero{
+    font-size:120px;
+    font-weight:bold;
+    margin:20px;
+}
+
+button{
+    padding:15px 30px;
+    font-size:20px;
+    cursor:pointer;
+}
+
+#historial{
+    margin-top:20px;
+    padding:15px;
+    border:1px solid #ccc;
+    min-height:50px;
+}
+
+#restantes{
+    margin-top:20px;
+    font-size:20px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>🎱 Bingo Mede</h1>
+
+<h3>Última Balota</h3>
+
+<div id="numero">-</div>
+
+<button onclick="sacarNumero()">
+Sacar Balota
+</button>
+
+<div id="restantes">
+Balotas restantes: 75
+</div>
+
+<h3>Historial</h3>
+
+<div id="historial"></div>
+
+<script src="/socket.io/socket.io.js"></script>
+
+<script>
+
+const socket = io();
+
+socket.on("estadoBingo", (estado) => {
+
+    document.getElementById("numero").innerText =
+        estado.ultimoNumero;
+
+    document.getElementById("historial").innerText =
+        estado.sorteados.join(" - ");
+
+    document.getElementById("restantes").innerText =
+        "Balotas restantes: " +
+        estado.disponibles.length;
+
+});
+
+function sacarNumero(){
+
+    socket.emit("sacarNumero");
+
+}
+
+</script>
+
+</body>
+
+</html>
