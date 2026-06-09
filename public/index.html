@@ -65,6 +65,9 @@ table th{
     color: white;
     font-weight: bold;
 }
+.coincidencia{
+    background-color: #f8edb8;
+}
 }
 
 </style>
@@ -175,11 +178,11 @@ function generarCarton(){
 
         html += "<tr>";
 
-        html += `<td onclick="marcar(this)">${B[fila]}</td>`;
-        html += `<td onclick="marcar(this)">${I[fila]}</td>`;
-        html += `<td onclick="marcar(this)">${N[fila]}</td>`;
-        html += `<td onclick="marcar(this)">${G[fila]}</td>`;
-        html += `<td onclick="marcar(this)">${O[fila]}</td>`;  
+    html += `<td data-numero="${B[fila]}" onclick="marcar(this)">${B[fila]}</td>`;
+    html += `<td data-numero="${I[fila]}" onclick="marcar(this)">${I[fila]}</td>`;
+    html += `<td data-numero="${N[fila]}" onclick="marcar(this)">${N[fila]}</td>`;
+    html += `<td data-numero="${G[fila]}" onclick="marcar(this)">${G[fila]}</td>`;
+    html += `<td data-numero="${O[fila]}" onclick="marcar(this)">${O[fila]}</td>`; 
 
         html += "</tr>";
     }
@@ -222,7 +225,34 @@ function entrar(){
 
 function marcar(celda){
 
+    celda.classList.remove("coincidencia");
+
     celda.classList.toggle("marcada");
+
+}
+
+
+function resaltarCoincidencia(numero){
+
+    // Quitar coincidencias anteriores
+    document
+        .querySelectorAll(".coincidencia")
+        .forEach(celda => {
+
+            if(!celda.classList.contains("marcada")){
+                celda.classList.remove("coincidencia");
+            }
+
+        });
+
+    // Buscar la nueva coincidencia
+    const celda = document.querySelector(
+        `[data-numero="${numero}"]`
+    );
+
+    if(celda && !celda.classList.contains("marcada")){
+        celda.classList.add("coincidencia");
+    }
 
 }
 
@@ -230,6 +260,8 @@ socket.on("estadoBingo", (estado) => {
 
     document.getElementById("numero")
         .innerText = estado.ultimoNumero;
+    
+    resaltarCoincidencia(estado.ultimoNumero);
 
     let anteriores = "- | -";
 
