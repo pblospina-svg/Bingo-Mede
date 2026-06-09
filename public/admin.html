@@ -55,6 +55,10 @@ button{
 Sacar Balota
 </button>
 
+<button onclick="nuevaPartida()">
+🎱 Nueva Partida
+</button>
+
 <div id="restantes">
 Balotas restantes: 75
 </div>
@@ -86,6 +90,11 @@ socket.on("estadoBingo", (estado) => {
 function sacarNumero(){
 
     socket.emit("sacarNumero");
+
+}
+function nuevaPartida(){
+
+    socket.emit("nuevaPartida");
 
 }
 

@@ -50,6 +50,24 @@ io.on("connection", (socket) => {
         });
 
     });
+    socket.on("nuevaPartida", () => {
+
+        ultimoNumero = "-";
+
+        sorteados = [];
+
+        disponibles = [];
+
+        for(let i = 1; i <= 75; i++){
+            disponibles.push(i);
+        }
+
+        io.emit("estadoBingo", {
+            ultimoNumero,
+            sorteados,
+            disponibles
+        });
+    });
 
 });
 
