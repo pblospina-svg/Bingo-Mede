@@ -1,10 +1,10 @@
 <!DOCTYPE html>
+
 <html lang="es">
 
 <head>
 
 <meta charset="UTF-8">
-
 <title>Bingo Mede</title>
 
 <style>
@@ -15,28 +15,56 @@ body{
     margin:20px;
 }
 
-#numero{
-    font-size:120px;
-    font-weight:bold;
-    margin:20px;
+input{
+    padding:10px;
+    font-size:18px;
+    width:250px;
 }
 
 button{
     padding:15px 30px;
     font-size:20px;
     cursor:pointer;
+    margin-top:10px;
 }
 
-#historial{
+#pantallaJuego{
+    display:none;
+}
+
+#numero{
+    font-size:120px;
+    font-weight:bold;
+    margin:20px;
+}
+
+#ultimos{
+    font-size:24px;
     margin-top:20px;
-    padding:15px;
+}
+
+#carton{
+    margin-top:30px;
     border:1px solid #ccc;
-    min-height:50px;
+    padding:20px;
+    min-height:100px;
+table td,
+table th{
+    border:1px solid #999;
+    width:60px;
+    height:60px;
+    text-align:center;
 }
 
-#restantes{
-    margin-top:20px;
-    font-size:20px;
+table th{
+    font-size:28px;
+
+}
+.marcada{
+    background-color: #4caf50;
+    color: white;
+    font-weight: bold;
+}
 }
 
 </style>
@@ -45,49 +73,186 @@ button{
 
 <body>
 
-<h1>🎱 Bingo Mede</h1>
+<div id="pantallaIngreso">
+
+```
+<h1>🎱 Bingo Mede 🎱</h1>
+
+<h3>Nombre del jugador</h3>
+
+<input
+    type="text"
+    id="nombreJugador"
+    placeholder="Escribe tu nombre">
+
+<br>
+
+<button onclick="entrar()">
+    Entrar
+</button>
+```
+
+</div>
+
+<div id="pantallaJuego">
+
+```
+<h1>🎱 Bingo Mede 🎱</h1>
+
+<h2 id="bienvenida"></h2>
 
 <h3>Última Balota</h3>
 
 <div id="numero">-</div>
 
-<button onclick="sacarNumero()">
-Sacar Balota
-</button>
-
-<div id="restantes">
-Balotas restantes: 75
+<div id="ultimos">
+    Anteriores: - | -
 </div>
 
-<h3>Historial</h3>
+<div id="carton"></div>
+```
 
-<div id="historial"></div>
+</div>
 
 <script src="/socket.io/socket.io.js"></script>
 
 <script>
 
 const socket = io();
+function numeroAleatorio(min, max){
+
+    return Math.floor(
+        Math.random() * (max - min + 1)
+    ) + min;
+
+}
+
+function generarColumna(inicio, fin){
+
+    let numeros = [];
+
+    while(numeros.length < 5){
+
+        const numero =
+            numeroAleatorio(inicio, fin);
+
+        if(!numeros.includes(numero)){
+            numeros.push(numero);
+        }
+
+    }
+
+    return numeros;
+
+}
+
+function generarCarton(){
+
+    const B = generarColumna(1,15);
+    const I = generarColumna(16,30);
+    const N = generarColumna(31,45);
+    const G = generarColumna(46,60);
+    const O = generarColumna(61,75);
+
+    N[2] = "LIBRE";
+
+    let html = `
+        <table style="
+            margin:auto;
+            border-collapse:collapse;
+            font-size:24px;
+        ">
+            <tr>
+                <th>B</th>
+                <th>I</th>
+                <th>N</th>
+                <th>G</th>
+                <th>O</th>
+            </tr>
+    `;
+
+    for(let fila = 0; fila < 5; fila++){
+
+        html += "<tr>";
+
+        html += `<td onclick="marcar(this)">${B[fila]}</td>`;
+        html += `<td onclick="marcar(this)">${I[fila]}</td>`;
+        html += `<td onclick="marcar(this)">${N[fila]}</td>`;
+        html += `<td onclick="marcar(this)">${G[fila]}</td>`;
+        html += `<td onclick="marcar(this)">${O[fila]}</td>`;  
+
+        html += "</tr>";
+    }
+
+    html += "</table>";
+
+    document.getElementById("carton").innerHTML = html;
+}
+
+socket.on("connect", () => {
+  console.log("🟢 Conectado al servidor:", socket.id);
+});
+
+let nombre = "";
+
+function entrar(){
+
+    nombre =
+        document.getElementById("nombreJugador")
+        .value
+        .trim();
+
+    if(nombre === ""){
+        alert("Debes escribir tu nombre");
+        return;
+    }
+
+    document.getElementById("pantallaIngreso")
+        .style.display = "none";
+
+    document.getElementById("pantallaJuego")
+        .style.display = "block";
+
+    document.getElementById("bienvenida")
+        .innerText = "Bienvenido " + nombre;
+        
+        generarCarton();
+
+}
+
+function marcar(celda){
+
+    celda.classList.toggle("marcada");
+
+}
 
 socket.on("estadoBingo", (estado) => {
 
-    document.getElementById("numero").innerText =
-        estado.ultimoNumero;
+    document.getElementById("numero")
+        .innerText = estado.ultimoNumero;
 
-    document.getElementById("historial").innerText =
-        estado.sorteados.join(" - ");
+    let anteriores = "- | -";
 
-    document.getElementById("restantes").innerText =
-        "Balotas restantes: " +
-        estado.disponibles.length;
+    if(estado.sorteados.length >= 2){
+
+        const ultimo =
+            estado.sorteados.length - 2;
+
+        const penultimo =
+            estado.sorteados.length - 3;
+
+        anteriores =
+            (estado.sorteados[ultimo] || "-")
+            + " | " +
+            (estado.sorteados[penultimo] || "-");
+
+    }
+
+    document.getElementById("ultimos")
+        .innerText =
+        "Anteriores: " + anteriores;
 
 });
-
-function sacarNumero(){
-
-    socket.emit("sacarNumero");
-
-}
 
 </script>
 
