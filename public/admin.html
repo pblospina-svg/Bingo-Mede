@@ -40,29 +40,33 @@ button{
 }
 #tablero{
     margin-top:20px;
-    text-align:left;
-    display:inline-block;
+    display:flex;
+    justify-content:center;
+    overflow-x:auto;
 }
 
-.fila{
-    margin:8px 0;
+#tablero table{
+    border-collapse:collapse;
+    width:100%;
+    max-width:1100px;
+}
+
+#tablero td{
+    border:1px solid #999;
+
+    width:55px;
+    height:55px;
+
+    text-align:center;
+    vertical-align:middle;
+
+    font-size:20px;
+    font-weight:bold;
 }
 
 .letra{
-    font-weight:bold;
     font-size:24px;
-    display:inline-block;
-    width:30px;
-}
-
-.balota{
-    display:inline-block;
-    width:35px;
-    padding:5px;
-    margin:2px;
-    border:1px solid #ccc;
-    border-radius:4px;
-    text-align:center;
+    padding:8px;
 }
 
 .sorteada{
@@ -71,7 +75,69 @@ button{
 }
 
 .ultima{
-    background-color:#f8edb8;
+    background-color:#ff8a8a;
+    color:black;
+}
+
+.fila{
+    margin:8px 0;
+}
+
+.letra{
+    display:inline-block;
+    width:35px;
+
+    background-color:#333;
+    color:white;
+
+    font-weight:bold;
+    text-align:center;
+
+    padding:5px;
+    border-radius:4px;
+}
+
+.balota{
+    display:inline-block;
+
+    width:40px;
+    height:32px;
+
+    line-height:32px;
+
+    margin:1px;
+
+    border:1px solid #bbb;
+
+    text-align:center;
+
+    border-radius:3px;
+}
+
+.sorteada{
+    background-color:#3cb371;
+    color:white;
+}
+
+.ultima{
+    background-color:#ff8a8a;
+    color:black;
+    font-weight:bold;
+    animation:pulseRojo 1s infinite;
+}
+@keyframes pulseRojo {
+    0% {
+        background-color:#ff8a8a;
+        transform: scale(1);
+    }
+    50% {
+        background-color:#ff5f5f;
+        transform: scale(1.08);
+    }
+    100% {
+        background-color:#ff8a8a;
+        transform: scale(1);
+    }
 }
 
 </style>
@@ -130,7 +196,7 @@ function dibujarTablero(estado){
         ["O", 61, 75]
     ];
 
-    let html = "";
+    let html = "<table>";
 
     grupos.forEach(grupo => {
 
@@ -138,37 +204,41 @@ function dibujarTablero(estado){
         const inicio = grupo[1];
         const fin = grupo[2];
 
+        html += "<tr>";
+
         html += `
-            <div class="fila">
-                <span class="letra">${letra}</span>
+            <td class="letra">
+                ${letra}
+            </td>
         `;
 
         for(let i = inicio; i <= fin; i++){
 
-            let clase = "balota";
+            let clase = "";
 
             if(estado.sorteados.includes(i)){
-                clase += " sorteada";
+                clase = "sorteada";
             }
 
             if(i === estado.ultimoNumero){
-                clase += " ultima";
+                clase = "ultima";
             }
 
             html += `
-                <span class="${clase}">
+                <td class="${clase}">
                     ${i}
-                </span>
+                </td>
             `;
         }
 
-        html += "</div>";
+        html += "</tr>";
 
     });
 
+    html += "</table>";
+
     document.getElementById("tablero").innerHTML =
         html;
-
 }
 
 function sacarNumero(){
