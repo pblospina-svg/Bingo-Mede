@@ -38,6 +38,41 @@ button{
     margin-top:20px;
     font-size:20px;
 }
+#tablero{
+    margin-top:20px;
+    text-align:left;
+    display:inline-block;
+}
+
+.fila{
+    margin:8px 0;
+}
+
+.letra{
+    font-weight:bold;
+    font-size:24px;
+    display:inline-block;
+    width:30px;
+}
+
+.balota{
+    display:inline-block;
+    width:35px;
+    padding:5px;
+    margin:2px;
+    border:1px solid #ccc;
+    border-radius:4px;
+    text-align:center;
+}
+
+.sorteada{
+    background-color:#4caf50;
+    color:white;
+}
+
+.ultima{
+    background-color:#f8edb8;
+}
 
 </style>
 
@@ -63,9 +98,9 @@ Sacar Balota
 Balotas restantes: 75
 </div>
 
-<h3>Historial</h3>
+<h3>Panel de Control</h3>
 
-<div id="historial"></div>
+<div id="tablero"></div>
 
 <script src="/socket.io/socket.io.js"></script>
 
@@ -78,14 +113,63 @@ socket.on("estadoBingo", (estado) => {
     document.getElementById("numero").innerText =
         estado.ultimoNumero;
 
-    document.getElementById("historial").innerText =
-        estado.sorteados.join(" - ");
+    dibujarTablero(estado);
 
     document.getElementById("restantes").innerText =
         "Balotas restantes: " +
         estado.disponibles.length;
 
 });
+function dibujarTablero(estado){
+
+    const grupos = [
+        ["B", 1, 15],
+        ["I", 16, 30],
+        ["N", 31, 45],
+        ["G", 46, 60],
+        ["O", 61, 75]
+    ];
+
+    let html = "";
+
+    grupos.forEach(grupo => {
+
+        const letra = grupo[0];
+        const inicio = grupo[1];
+        const fin = grupo[2];
+
+        html += `
+            <div class="fila">
+                <span class="letra">${letra}</span>
+        `;
+
+        for(let i = inicio; i <= fin; i++){
+
+            let clase = "balota";
+
+            if(estado.sorteados.includes(i)){
+                clase += " sorteada";
+            }
+
+            if(i === estado.ultimoNumero){
+                clase += " ultima";
+            }
+
+            html += `
+                <span class="${clase}">
+                    ${i}
+                </span>
+            `;
+        }
+
+        html += "</div>";
+
+    });
+
+    document.getElementById("tablero").innerHTML =
+        html;
+
+}
 
 function sacarNumero(){
 
