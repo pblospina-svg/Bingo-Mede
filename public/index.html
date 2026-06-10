@@ -93,13 +93,11 @@ table th{
 <button onclick="entrar()">
     Entrar
 </button>
-```
 
 </div>
 
 <div id="pantallaJuego">
 
-```
 <h1>🎱 Bingo Mede 🎱</h1>
 
 <h2 id="bienvenida"></h2>
@@ -113,7 +111,10 @@ table th{
 </div>
 
 <div id="carton"></div>
-```
+
+<button onclick="cantarBingo()">
+    Cantar BINGO
+</button>
 
 </div>
 
@@ -230,7 +231,12 @@ function marcar(celda){
     celda.classList.toggle("marcada");
 
 }
+function cantarBingo(){
 
+    console.log("El jugador cantó BINGO");
+    socket.emit("cantarBingo", nombre);
+
+}
 
 function resaltarCoincidencia(numero){
 

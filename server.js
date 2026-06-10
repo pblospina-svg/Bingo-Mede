@@ -50,6 +50,17 @@ io.on("connection", (socket) => {
         });
 
     });
+
+    socket.on("cantarBingo", (nombre) => {
+
+    console.log(
+         nombre + " cantó BINGO"
+         
+    );
+    
+    io.emit("bingoCantado", nombre);
+});
+
     socket.on("nuevaPartida", () => {
 
         ultimoNumero = "-";
@@ -67,6 +78,7 @@ io.on("connection", (socket) => {
             sorteados,
             disponibles
         });
+
     });
 
 });

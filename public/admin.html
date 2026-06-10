@@ -139,6 +139,13 @@ button{
         transform: scale(1);
     }
 }
+#alertaBingo{
+    margin-top:20px;
+    font-size:28px;
+    font-weight:bold;
+    color:#d32f2f;
+    min-height:40px;
+}
 
 </style>
 
@@ -159,6 +166,8 @@ Sacar Balota
 <button onclick="nuevaPartida()">
 🎱 Nueva Partida
 </button>
+
+<div id="alertaBingo"></div>
 
 <div id="restantes">
 Balotas restantes: 75
@@ -184,6 +193,14 @@ socket.on("estadoBingo", (estado) => {
     document.getElementById("restantes").innerText =
         "Balotas restantes: " +
         estado.disponibles.length;
+
+socket.on("bingoCantado", (nombre) => {
+
+    document.getElementById("alertaBingo")
+        .innerText =
+        "⚠ " + nombre + " ha cantado BINGO";
+
+});        
 
 });
 function dibujarTablero(estado){
