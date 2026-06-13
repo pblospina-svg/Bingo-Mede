@@ -9,33 +9,32 @@ const io = new Server(server);
 app.use(express.static("public"));
 
 let ultimoNumero = "-";
-
+let sorteados = [];
 let disponibles = [];
+
 for (let i = 1; i <= 75; i++) {
     disponibles.push(i);
 }
 
-let sorteados = [];
+let ultimoBingo = "";
 
 io.on("connection", (socket) => {
 
     console.log("Jugador conectado");
 
+    // Enviar estado inicial
     socket.emit("estadoBingo", {
         ultimoNumero,
         sorteados,
         disponibles
     });
 
+    // Sacar número
     socket.on("sacarNumero", () => {
 
-        if (disponibles.length === 0) {
-            return;
-        }
+        if (disponibles.length === 0) return;
 
-        const indice = Math.floor(
-            Math.random() * disponibles.length
-        );
+        const indice = Math.floor(Math.random() * disponibles.length);
 
         ultimoNumero = disponibles[indice];
 
@@ -48,44 +47,41 @@ io.on("connection", (socket) => {
             sorteados,
             disponibles
         });
-
     });
 
-    socket.on("cantarBingo", (nombre) => {
-
-    ultimoBingo = nombre;
-
-    io.emit("bingoCantado", nombre);
-
-});
-    
-    io.emit("bingoCantado", nombre);
-});
-
+    // Nueva partida
     socket.on("nuevaPartida", () => {
 
         ultimoNumero = "-";
-
         sorteados = [];
-
         disponibles = [];
 
-        for(let i = 1; i <= 75; i++){
+        for (let i = 1; i <= 75; i++) {
             disponibles.push(i);
         }
+
+        ultimoBingo = "";
 
         io.emit("estadoBingo", {
             ultimoNumero,
             sorteados,
             disponibles
         });
-        io.emit("limpiarBingo");
 
-        ultimoBingo = "";
         io.emit("limpiarBingo");
     });
 
-let ultimoBingo = "";
+    // Cantar bingo (ESTO TE FALTABA)
+    socket.on("cantarBingo", (nombre) => {
+
+        console.log("BINGO cantado por:", nombre);
+
+        ultimoBingo = nombre;
+
+        io.emit("bingoCantado", nombre);
+    });
+
+});
 
 const PORT = process.env.PORT || 3000;
 
