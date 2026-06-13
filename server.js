@@ -53,10 +53,11 @@ io.on("connection", (socket) => {
 
     socket.on("cantarBingo", (nombre) => {
 
-    console.log(
-         nombre + " cantó BINGO"
-         
-    );
+    ultimoBingo = nombre;
+
+    io.emit("bingoCantado", nombre);
+
+});
     
     io.emit("bingoCantado", nombre);
 });
@@ -78,10 +79,13 @@ io.on("connection", (socket) => {
             sorteados,
             disponibles
         });
+        io.emit("limpiarBingo");
 
+        ultimoBingo = "";
+        io.emit("limpiarBingo");
     });
 
-});
+let ultimoBingo = "";
 
 const PORT = process.env.PORT || 3000;
 

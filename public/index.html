@@ -5,14 +5,13 @@
 <head>
 
 <meta charset="UTF-8">
-<title>Bingo Mede</title>
+<title>Bingo Medellín</title>
 
 <style>
 
 body {
     font-family: 'Segoe UI', Arial, sans-serif;
-    background: linear-gradient(135deg, #0f172a, #1e293b);
-    color: white;
+    color: rgb(0, 0, 0);
     text-align: center;
     margin: 0;
     padding: 20px;
@@ -47,17 +46,14 @@ button:active {
     transform: scale(0.98);
 }
 
-#pantallaJuego{
-    display:none;
+#numero {
+    font-size: 100px;
+    font-weight: bold;
+    margin: 10px;
+    color: #facc15;
+    text-shadow: 5px 5px 10px rgba(0, 0, 0, 0.4);
 }
 
-#numero {
-    font-size: 140px;
-    font-weight: bold;
-    margin: 30px;
-    color: #facc15;
-    text-shadow: 0 0 20px rgba(250, 204, 21, 0.4);
-}
 .balota {
     display: inline-block;
     width: 40px;
@@ -72,34 +68,93 @@ button:active {
 }
 #ultimos{
     font-size:24px;
-    margin-top:20px;
+    margin-top:5px;
 }
 
 #carton{
-    margin-top:30px;
-    border:1px solid #ccc;
+    margin:3px auto;
+
+    background: rgba(255,255,255,0.08);
+
     padding:20px;
-    min-height:100px;
-table td,
-table th{
-    border:1px solid #999;
-    width:60px;
-    height:60px;
+
+    border-radius:16px;
+
+    box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+
+    border: 1px solid rgba(255,255,255,0.12);
+    display:inline-block;
+}
+
+/* TABLA DEL CARTÓN */
+#carton table{
+    margin:auto;
+    border-collapse: separate;
+    border-spacing: 8px;
+    font-size:24px;
+}
+
+#carton td{
+    width: 60px;
+    height: 60px;
+
+    text-align: center;
+    vertical-align: middle;
+
+    font-size: 18px;
+    font-weight: bold;
+
+    border-radius: 50%;
+
+    background: white;
+
+    border: 2px solid #d0d0d0;
+
+    transition: all 0.25s ease;
+
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+
+    padding: 0;
+    
+}
+#pantallaJuego{
+    display:none;
     text-align:center;
 }
 
-table th{
-    font-size:28px;
+/* encabezado BINGO */
+#carton th{
+    width: 60px;
+    height: 60px;
 
-}
-.marcada{
-    background-color: #4caf50;
+    background: #111;
     color: white;
+
+    font-size: 28px;
     font-weight: bold;
+
+    border-radius: 12px;
+
+    text-align: center;
 }
+#accionesJugador{
+    margin-top:5px;
+    display:flex;
+    justify-content:center;
+}
+/* marcada por jugador */
+.marcada{
+    background: #22c55e !important;
+    color: black;
+}
+
+/* coincidencia con número sorteado */
 .coincidencia{
-    background-color: #f8edb8;
-}
+    background: #f4c542 !important;
+    color: black;
+    transform: scale(1.1);
+    box-shadow: 0 0 12px rgba(244, 197, 66, 0.5);
+    
 }
 
 </style>
@@ -111,7 +166,7 @@ table th{
 <div id="pantallaIngreso">
 
 ```
-<h1>🎱 Bingo Mede 🎱</h1>
+<h1>BINGO MEDELLÍN</h1>
 
 <h3>Nombre del jugador</h3>
 
@@ -130,7 +185,7 @@ table th{
 
 <div id="pantallaJuego">
 
-<h1>🎱 Bingo Mede 🎱</h1>
+<h1>BINGO MEDELLÍN</h1>
 
 <h2 id="bienvenida"></h2>
 
@@ -144,9 +199,13 @@ table th{
 
 <div id="carton"></div>
 
-<button onclick="cantarBingo()">
-    Cantar BINGO
-</button>
+<div id="accionesJugador">
+
+    <button onclick="cantarBingo()">
+        Cantar BINGO
+    </button>
+
+</div>
 
 </div>
 
@@ -193,11 +252,8 @@ function generarCarton(){
     N[2] = "LIBRE";
 
     let html = `
-        <table style="
-            margin:auto;
-            border-collapse:collapse;
-            font-size:24px;
-        ">
+        <table>
+    
             <tr>
                 <th>B</th>
                 <th>I</th>

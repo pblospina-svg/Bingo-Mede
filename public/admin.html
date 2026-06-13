@@ -5,77 +5,126 @@
 
 <meta charset="UTF-8">
 
-<title>Bingo Mede</title>
+<title>Bingo Medellín</title>
 
 <style>
 
-body{
-    font-family: Arial, sans-serif;
-    text-align:center;
-    margin:20px;
+body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    color: rgb(0, 0, 0);
+    text-align: center;
+    margin: 0;
+    padding: 20px;
 }
 
-#numero{
-    font-size:120px;
-    font-weight:bold;
-    margin:20px;
+#numero {
+    font-size: 140px;
+    font-weight: bold;
+    margin: 10px;
+    color: #facc15;
+    text-shadow: 5px 5px 10px rgba(0, 0, 0, 0.4);
 }
 
 button{
-    padding:15px 30px;
+    width:220px;
+
+    height:60px;
+
     font-size:20px;
+    font-weight:bold;
+
+    border:none;
+    border-radius:15px;
+
     cursor:pointer;
+
+    margin:3px;
+
+    transition:all .2s ease;
+}
+button:hover{
+    transform:translateY(-2px);
+
+    box-shadow:0 4px 10px rgba(0,0,0,.25);
 }
 
 #historial{
-    margin-top:20px;
+    margin-top:5px;
     padding:15px;
     border:1px solid #ccc;
     min-height:50px;
 }
 
 #restantes{
-    margin-top:20px;
+    margin-top:5px;
     font-size:20px;
 }
-#tablero {
-    margin-top: 25px;
-    display: flex;
-    justify-content: center;
-    overflow-x: auto;
 
-    padding: 10px;
-    border-radius: 15px;
+#tablero{
+    margin-top:5px;
+
+    display:flex;
+    justify-content:center;
+
+    padding:20px;
+
+    border:4px solid #c62828;
+    border-radius:20px;
+
+    background:#fafafa;
+
+    width:max-content;
+    margin-left:auto;
+    margin-right:auto;
 }
 #tablero table {
     border-collapse: separate;
     border-spacing: 8px;
     margin: auto;
 
-    background: rgba(255,255,255,0.03);
-    padding: 10px;
-    border-radius: 12px;
+    background: #f8a7a7c4;
+
+    padding: 15px;
+
+    border-radius: 20px;
 }
 
 #tablero td {
+
     width: 60px;
     height: 60px;
+
+    min-width: 60px;
+    max-width: 60px;
+
+    min-height: 60px;
+    max-height: 60px;
+
+    line-height: 60px;
 
     text-align: center;
     vertical-align: middle;
 
-    font-size: 18px;
-    font-weight: bold;
+    font-size: 26px;
+    font-weight: 900;
 
-    border-radius: 12px;
+    text-shadow:
+        1px 1px 0 rgba(255,255,255,0.7),
+        -1px -1px 0 rgba(0,0,0,0.15);
 
-    background: rgba(255,255,255,0.07);
-    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 50%;
+
+    background: white;
+
+    border: 2px solid #d0d0d0;
 
     transition: all 0.25s ease;
 
     box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+
+    padding: 0;
 }
+
 #tablero td:hover {
     transform: scale(1.05);
     cursor: pointer;
@@ -90,32 +139,38 @@ button{
 }
 
 .letra{
-    display:inline-block;
-    width:35px;
+    background: #111 !important;
+    color: white !important;
 
-    background-color:#333;
+    width: 60px;
+    height: 60px;
+
+    font-size: 32px;
+    font-weight: bold;
+
+    text-align: center;
+    vertical-align: middle;
+
+    border-radius: 12px;
+
+    border: 2px solid white;
+}
+
+.sorteada{
+    background:#43a047 !important;
     color:white;
-
-    font-weight:bold;
-    text-align:center;
-
-    padding:5px;
-    border-radius:4px;
+    border-color:#2e7d32;
 }
 
-.sorteada {
-    background: linear-gradient(135deg, #22c55e, #16a34a) !important;
-    color: black;
-    transform: scale(0.98);
-}
+.ultima{
+    background: #ff0404 !important;
+    color: rgb(247, 243, 243) !important;
 
-.ultima {
-    background: linear-gradient(135deg, #ef4444, #dc2626) !important;
-    color: white;
+    transform: scale(1.15);
 
-    transform: scale(1.08);
+    box-shadow: 0 0 15px rgba(244, 197, 66, 0.7);
 
-    box-shadow: 0 0 15px rgba(239, 68, 68, 0.6);
+    border: 2px solid #d4a017;
 }
 
 @keyframes pulseRojo {
@@ -125,11 +180,18 @@ button{
 }
 
 #alertaBingo{
-    margin-top:20px;
+    margin-top:5px;
     font-size:28px;
     font-weight:bold;
     color:#d32f2f;
-    min-height:40px;
+    min-height:25px;
+}
+#controles{
+    display:flex;
+    justify-content:center;
+    gap:8px;
+
+    margin:5px 0;
 }
 
 </style>
@@ -138,27 +200,31 @@ button{
 
 <body>
 
-<h1>🎱 Bingo Mede</h1>
+<h1>BINGO MEDELLÍN</h1>
 
 <h3>Última Balota</h3>
 
+
 <div id="numero">-</div>
 
-<button onclick="sacarNumero()">
-Sacar Balota
-</button>
+<div id="controles">
 
-<button onclick="nuevaPartida()">
-🎱 Nueva Partida
-</button>
+    <button onclick="sacarNumero()">
+        Sacar Balota
+    </button>
+
+    <button onclick="nuevaPartida()">
+        Reiniciar
+    </button>
+
+</div>
+
 
 <div id="alertaBingo"></div>
 
 <div id="restantes">
 Balotas restantes: 75
 </div>
-
-<h3>Panel de Control</h3>
 
 <div id="tablero"></div>
 
@@ -170,14 +236,15 @@ const socket = io();
 
 socket.on("estadoBingo", (estado) => {
 
-    document.getElementById("numero").innerText =
-        estado.ultimoNumero;
+    document.getElementById("numero").innerText = estado.ultimoNumero;
 
     dibujarTablero(estado);
 
     document.getElementById("restantes").innerText =
         "Balotas restantes: " + estado.disponibles.length;
 
+    // 👇 LIMPIEZA SEGURA
+    document.getElementById("alertaBingo").innerText = "";
 });
 
 socket.on("bingoCantado", (nombre) => {
@@ -186,6 +253,10 @@ socket.on("bingoCantado", (nombre) => {
         .innerText =
         "⚠ " + nombre + " ha cantado BINGO";
 
+});
+
+socket.on("limpiarBingo", () => {
+    document.getElementById("alertaBingo").innerText = "";
 });
 
 function dibujarTablero(estado){
