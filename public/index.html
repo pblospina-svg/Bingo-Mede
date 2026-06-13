@@ -377,7 +377,23 @@ socket.on("estadoBingo", (estado) => {
     document.getElementById("ultimos")
         .innerText =
         "Anteriores: " + anteriores;
+socket.on("limpiarCartones", () => {
 
+    document
+        .querySelectorAll(".marcada")
+        .forEach(celda => {
+            celda.classList.remove("marcada");
+        });
+
+    document
+        .querySelectorAll(".coincidencia")
+        .forEach(celda => {
+            celda.classList.remove("coincidencia");
+        });
+
+});
+
+        
 });
 
 </script>

@@ -69,6 +69,7 @@ io.on("connection", (socket) => {
         });
 
         io.emit("limpiarBingo");
+        io.emit("limpiarCartones");
     });
 
     // Cantar bingo (ESTO TE FALTABA)
