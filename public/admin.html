@@ -38,45 +38,51 @@ button{
     margin-top:20px;
     font-size:20px;
 }
-#tablero{
-    margin-top:20px;
-    display:flex;
-    justify-content:center;
-    overflow-x:auto;
+#tablero {
+    margin-top: 25px;
+    display: flex;
+    justify-content: center;
+    overflow-x: auto;
+
+    padding: 10px;
+    border-radius: 15px;
+}
+#tablero table {
+    border-collapse: separate;
+    border-spacing: 8px;
+    margin: auto;
+
+    background: rgba(255,255,255,0.03);
+    padding: 10px;
+    border-radius: 12px;
 }
 
-#tablero table{
-    border-collapse:collapse;
-    width:100%;
-    max-width:1100px;
+#tablero td {
+    width: 60px;
+    height: 60px;
+
+    text-align: center;
+    vertical-align: middle;
+
+    font-size: 18px;
+    font-weight: bold;
+
+    border-radius: 12px;
+
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.12);
+
+    transition: all 0.25s ease;
+
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
 }
-
-#tablero td{
-    border:1px solid #999;
-
-    width:55px;
-    height:55px;
-
-    text-align:center;
-    vertical-align:middle;
-
-    font-size:20px;
-    font-weight:bold;
+#tablero td:hover {
+    transform: scale(1.05);
+    cursor: pointer;
 }
-
 .letra{
     font-size:24px;
     padding:8px;
-}
-
-.sorteada{
-    background-color:#4caf50;
-    color:white;
-}
-
-.ultima{
-    background-color:#ff8a8a;
-    color:black;
 }
 
 .fila{
@@ -97,48 +103,27 @@ button{
     border-radius:4px;
 }
 
-.balota{
-    display:inline-block;
-
-    width:40px;
-    height:32px;
-
-    line-height:32px;
-
-    margin:1px;
-
-    border:1px solid #bbb;
-
-    text-align:center;
-
-    border-radius:3px;
+.sorteada {
+    background: linear-gradient(135deg, #22c55e, #16a34a) !important;
+    color: black;
+    transform: scale(0.98);
 }
 
-.sorteada{
-    background-color:#3cb371;
-    color:white;
+.ultima {
+    background: linear-gradient(135deg, #ef4444, #dc2626) !important;
+    color: white;
+
+    transform: scale(1.08);
+
+    box-shadow: 0 0 15px rgba(239, 68, 68, 0.6);
 }
 
-.ultima{
-    background-color:#ff8a8a;
-    color:black;
-    font-weight:bold;
-    animation:pulseRojo 1s infinite;
-}
 @keyframes pulseRojo {
-    0% {
-        background-color:#ff8a8a;
-        transform: scale(1);
-    }
-    50% {
-        background-color:#ff5f5f;
-        transform: scale(1.08);
-    }
-    100% {
-        background-color:#ff8a8a;
-        transform: scale(1);
-    }
+    0% { transform: scale(1); }
+    50% { transform: scale(1.08); }
+    100% { transform: scale(1); }
 }
+
 #alertaBingo{
     margin-top:20px;
     font-size:28px;
@@ -191,8 +176,9 @@ socket.on("estadoBingo", (estado) => {
     dibujarTablero(estado);
 
     document.getElementById("restantes").innerText =
-        "Balotas restantes: " +
-        estado.disponibles.length;
+        "Balotas restantes: " + estado.disponibles.length;
+
+});
 
 socket.on("bingoCantado", (nombre) => {
 
@@ -200,9 +186,8 @@ socket.on("bingoCantado", (nombre) => {
         .innerText =
         "⚠ " + nombre + " ha cantado BINGO";
 
-});        
-
 });
+
 function dibujarTablero(estado){
 
     const grupos = [
